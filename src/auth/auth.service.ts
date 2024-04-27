@@ -111,10 +111,7 @@ export class AuthService {
     var transport = nodemailer.createTransport({
       host: this.config.get('MAIL_HOST'),
       port: this.config.get('MAIL_PORT'),
-      secure:
-        process.env.NODE_ENV === 'development'
-          ? false
-          : this.config.get('MAIL_SECURE'),
+      secure: this.config.get('MAIL_SECURE'),
       auth: {
         user: this.config.get('MAIL_USER'),
         pass: this.config.get('MAIL_PASSWORD'),
