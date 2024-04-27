@@ -5,10 +5,7 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
 import { ConfigService } from '@nestjs/config';
-import { randomInt } from 'crypto';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { Role, User } from '@prisma/client';
 
@@ -71,20 +68,6 @@ export class UserService {
       ...biodata.user,
     };
     if (user.isVerified) return response;
-    try {
-      const verificationCode = this.generateRandomCode();
-      await this.prisma.unverifiedUser.update({
-        where: {
-          userId: id,
-        },
-        data: { token: verificationCode },
-      });
-      await this.sendEmail(email, verificationCode);
-
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async verifyCode(verifyCodeDto: VerifyCodeDto, userId: number) {
@@ -109,37 +92,5 @@ export class UserService {
     return user;
   }
 
-  async sendEmail(email: string, code: number) {
-    var transport = nodemailer.createTransport({
-      host: this.config.get('MAIL_HOST'),
-      port: this.config.get('MAIL_PORT'),
-      secure: this.config.get('MAIL_SECURE'),
-      auth: {
-        user: this.config.get('MAIL_USER'),
-        pass: this.config.get('MAIL_PASSWORD'),
-      },
-    });
-
-    const options: Mail.Options = {
-      from: {
-        name: this.config.get('APP_NAME'),
-        address: this.config.get('DEFAULT_MAIL_FROM'),
-      },
-      to: email,
-      subject: 'Verfication Code',
-      html: `<p>Your verification code <strong>${code}</strong>`,
-    };
-
-    try {
-      const result = await transport.sendMail(options);
-      return result;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  generateRandomCode(): number {
-    // Generate a random 4-digit number
-    return randomInt(1000, 9999);
-  }
+  
 }
