@@ -14,19 +14,143 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  mentee    Mentee?  @relation(fields: [id], references: [userId], map: { name: "user_mentee_fkey" })
-  mentor    Mentor?  @relation(fields: [id], references: [userId], map: { name: "user_mentor_fkey" })
+  id             Int               @id @default(autoincrement())
+  email          String            @unique
+  hash           String
+  role           Role              @default(MENTEE)
+  isVerified     Boolean           @default(false)
+  profilePicture String?
+  biodata        Biodata?
+  mentee         Relation[]        @relation(name: "mentee")
+  mentor         Relation[]        @relation(name: "mentor")
+  unverifiedUser UnverifiedUser?
+  resources      Resources[]
+  mentorSessions SessionRequests[] @relation(name: "scheduled_mentor")
+  menteeSessions SessionRequests[] @relation(name: "scheduling_mentee")
 }
 
-model Mentee {
-  id     Int @id @default(autoincrement())
-  userId Int @unique
+model Resources {
+  id                Int          @id @default(autoincrement())
+  type              ResourceType
+  title             String
+  description       String?
+  content           String?
+  coverPhoto        String?
+  category          String
+  createdAt         DateTime     @default(now())
+  studentsEnrolled  Int?         @default(0)
+  price             Float?
+  level             String?
+  duration          String
+  lessons           Int?
+  quizzes           Int?         @default(0)
+  hasCertifications Boolean?     @default(false)
+  studentGraduated  Int?         @default(0)
+  userId            Int
+  user              User         @relation(fields: [userId], references: [id])
 }
 
-model Mentor {
-  id     Int @id @default(autoincrement())
-  userId Int @unique
+model UnverifiedUser {
+  id     Int    @id @default(autoincrement())
+  email  String @unique
+  token  Int?
+  userId Int    @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  MENTOR
+  MENTEE
+}
+
+enum ResourceType {
+  course
+  article
+}
+
+enum RequestStatus {
+  MENTOR_ACCEPTED
+  PENDING_REQUEST
+  NOT_ACTIVE
+}
+
+enum SessionRequestStatus {
+  ACCEPTED
+  PENDING
+  DECLINED
+}
+
+enum DaysType {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Biodata {
+  id                Int            @id @default(autoincrement())
+  name              String?
+  gender            String?
+  institution       String?
+  location          String?
+  parentEmail       String?
+  skills            String[]
+  industry          String?
+  yearsOfExperience Int?
+  levelOfExpertise  String?
+  userId            Int            @unique
+  user              User           @relation(fields: [userId], references: [id])
+  availability      Availability[]
+}
+
+model Availability {
+  id                       Int       @id @default(autoincrement())
+  mentorId                 Int
+  mentor                   Biodata   @relation(fields: [mentorId], references: [id])
+  dayAvailable             DaysType
+  timeAvailable            Int
+  timeRemainingForSchedule Int?
+  lastDateScheduled        DateTime?
+
+  @@unique([dayAvailable, mentorId])
+}
+
+// model Days {
+//   id  Int    @id @default(autoincrement())
+//   day String @unique
+
+//   Availability Availability[]
+// }
+
+model SessionRequests {
+  id            Int                   @id @default(autoincrement())
+  createdAt     DateTime              @default(now())
+  dateScheduled DateTime
+  timeScheduled String
+  duration      Int
+  expectations  String[]
+  questions     String[]
+  message       String?
+  status        SessionRequestStatus? @default(PENDING)
+  mentorId      Int
+  menteeId      Int
+  mentee        User                  @relation("scheduling_mentee", fields: [menteeId], references: [id])
+  mentor        User                  @relation("scheduled_mentor", fields: [mentorId], references: [id])
+
+  @@unique([menteeId, mentorId])
+}
+
+model Relation {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  menteeId  Int
+  mentee    User          @relation("mentee", fields: [menteeId], references: [id])
+  mentor    User          @relation("mentor", fields: [mentorId], references: [id])
+  mentorId  Int
+  status    RequestStatus @default(PENDING_REQUEST)
+
+  @@unique([menteeId, mentorId])
 }
