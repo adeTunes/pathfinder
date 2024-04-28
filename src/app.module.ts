@@ -11,9 +11,13 @@ import { ResourcesModule } from './resources/resources.module';
 import { MentorModule } from './mentor/mentor.module';
 import { SessionModule } from './sessions/session.module';
 import { FileModule } from './file/file.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
+    GatewayModule,
+    ChatModule,
     AuthModule,
     UserModule,
     PrismaModule,

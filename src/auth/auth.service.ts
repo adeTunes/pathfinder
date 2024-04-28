@@ -89,6 +89,33 @@ export class AuthService {
     return { ...access_token, isVerified: user.isVerified };
   }
 
+  async resendOTP(userId: number) {
+    const unverifiedUser = await this.prisma.unverifiedUser.update({
+      where: { userId },
+      data: { token: this.generateRandomCode() },
+      select: {
+        token: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            isVerified: true,
+            role: true,
+          },
+        },
+      },
+    });
+    const user = unverifiedUser.user;
+    try {
+      await this.sendEmail(user.email, unverifiedUser.token);
+      return user;
+    } catch (error) {
+      throw new BadRequestException(
+        'Something went wrong!!, could not sign up',
+      );
+    }
+  }
+
   async signToken(
     id: number,
     email: string,

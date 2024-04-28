@@ -27,6 +27,16 @@ model User {
   resources      Resources[]
   mentorSessions SessionRequests[] @relation(name: "scheduled_mentor")
   menteeSessions SessionRequests[] @relation(name: "scheduling_mentee")
+  Message        Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  body      String
+  roomKey   String   @unique
+  createdAt DateTime @default(now())
+  senderId  Int
+  sender    User     @relation(fields: [senderId], references: [id])
 }
 
 model Resources {
