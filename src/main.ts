@@ -11,7 +11,10 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '../uploads'), {
     prefix: '/public/',
   });
-  app.enableCors({ origin: process.env.ALLOWED_ORIGIN?.split(',') });
+  app.enableCors({
+    origin: ['http://localhost:3001'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   await app.listen(process.env.APP_PORT || 4000);
 }
 bootstrap();
