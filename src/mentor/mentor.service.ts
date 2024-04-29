@@ -75,6 +75,7 @@ export class MentorService {
           id: true,
           email: true,
           role: true,
+          availability: true,
           resources: true,
           mentor: {
             select: {
@@ -96,7 +97,6 @@ export class MentorService {
             select: {
               name: true,
               industry: true,
-              availability: true,
             },
           },
         },
@@ -104,6 +104,7 @@ export class MentorService {
 
       return {
         id: mentor.id,
+        availability: mentor.availability,
         email: mentor.email,
         name: mentor.biodata?.name,
         resources: mentor.resources.map((item) => {
@@ -130,7 +131,6 @@ export class MentorService {
               hasCertifications,
             };
         }),
-        availability: mentor.biodata.availability,
         ...(userId && {
           status:
             mentor.mentor.find((el) => el.mentee.id === userId)?.status ??

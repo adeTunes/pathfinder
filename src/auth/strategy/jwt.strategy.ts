@@ -25,17 +25,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         id: true,
         email: true,
         profilePicture: true,
+        availability: {
+          select: {
+            dayAvailable: true,
+            timeAvailable: true,
+          },
+        },
         biodata: {
           select: {
             name: true,
             gender: true,
             institution: true,
-            availability: {
-              select: {
-                dayAvailable: true,
-                timeAvailable: true,
-              },
-            },
           },
         },
         isVerified: true,
@@ -74,13 +74,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         role: true,
       },
     });
-    const {
-      mentee,
-      mentor,
-      biodata: { availability, ...remaining },
-      ...rest
-    } = user;
-    let response = { ...rest, ...remaining, availability };
+    const { mentee, mentor, biodata, availability, ...rest } = user;
+    let response = { ...rest, ...biodata, availability };
     if (response.role === 'MENTEE') {
       return {
         ...response,

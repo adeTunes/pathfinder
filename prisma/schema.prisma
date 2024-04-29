@@ -28,6 +28,7 @@ model User {
   mentorSessions SessionRequests[] @relation(name: "scheduled_mentor")
   menteeSessions SessionRequests[] @relation(name: "scheduling_mentee")
   Message        Message[]
+  availability   Availability[]
 }
 
 model Message {
@@ -101,7 +102,7 @@ enum DaysType {
 }
 
 model Biodata {
-  id                Int            @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   name              String?
   gender            String?
   institution       String?
@@ -111,15 +112,14 @@ model Biodata {
   industry          String?
   yearsOfExperience Int?
   levelOfExpertise  String?
-  userId            Int            @unique
-  user              User           @relation(fields: [userId], references: [id])
-  availability      Availability[]
+  userId            Int      @unique
+  user              User     @relation(fields: [userId], references: [id])
 }
 
 model Availability {
   id                       Int       @id @default(autoincrement())
   mentorId                 Int
-  mentor                   Biodata   @relation(fields: [mentorId], references: [id])
+  mentor                   User      @relation(fields: [mentorId], references: [id])
   dayAvailable             DaysType
   timeAvailable            Int
   timeRemainingForSchedule Int?

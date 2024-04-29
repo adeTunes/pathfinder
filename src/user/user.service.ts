@@ -67,7 +67,7 @@ export class UserService {
       gender: biodata.gender,
       ...biodata.user,
     };
-    if (user.isVerified) return response;
+    return response;
   }
 
   async verifyCode(verifyCodeDto: VerifyCodeDto, userId: number) {
@@ -91,6 +91,4 @@ export class UserService {
     delete user.hash;
     return user;
   }
-
-  
 }
