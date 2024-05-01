@@ -77,6 +77,7 @@ export class MentorService {
           role: true,
           availability: true,
           resources: true,
+          profilePicture: true,
           mentor: {
             select: {
               status: true,
@@ -97,6 +98,8 @@ export class MentorService {
             select: {
               name: true,
               industry: true,
+              bio: true,
+              headline: true,
             },
           },
         },
@@ -107,6 +110,10 @@ export class MentorService {
         availability: mentor.availability,
         email: mentor.email,
         name: mentor.biodata?.name,
+        profilePicture: mentor.profilePicture,
+        industry: mentor.biodata.industry,
+        bio: mentor.biodata.bio,
+        headline: mentor.biodata.headline,
         resources: mentor.resources.map((item) => {
           const {
             content,

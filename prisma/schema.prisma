@@ -112,6 +112,8 @@ model Biodata {
   industry          String?
   yearsOfExperience Int?
   levelOfExpertise  String?
+  bio               String?
+  headline               String?
   userId            Int      @unique
   user              User     @relation(fields: [userId], references: [id])
 }

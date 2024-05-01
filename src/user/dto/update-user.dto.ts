@@ -29,6 +29,14 @@ export class UpdateUserDto {
   location?: string;
 
   @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @IsOptional()
+  @IsString()
+  headline?: string;
+
+  @IsOptional()
   @IsEmail()
   parentEmail?: string;
 
