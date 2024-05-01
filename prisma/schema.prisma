@@ -141,7 +141,7 @@ model Availability {
 model SessionRequests {
   id            Int                   @id @default(autoincrement())
   createdAt     DateTime              @default(now())
-  dateScheduled DateTime
+  dateScheduled String
   timeScheduled String
   duration      Int
   expectations  String[]

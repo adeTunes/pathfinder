@@ -9,9 +9,9 @@ import {
 } from 'class-validator';
 
 export class RequestSessionDto {
-  @IsDateString()
+  @IsString()
   @IsNotEmpty()
-  dateScheduled: Date;
+  dateScheduled: string;
 
   @IsNotEmpty()
   @IsNumber()
