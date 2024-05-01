@@ -185,11 +185,13 @@ export class MentorService {
           select: {
             id: true,
             email: true,
+            profilePicture: true,
             biodata: {
               select: {
                 name: true,
                 location: true,
                 gender: true,
+                skills: true,
               },
             },
           },
@@ -198,11 +200,13 @@ export class MentorService {
           select: {
             id: true,
             email: true,
+            profilePicture: true,
             biodata: {
               select: {
                 name: true,
                 location: true,
                 gender: true,
+                skills: true,
               },
             },
           },
@@ -216,27 +220,32 @@ export class MentorService {
         mentee: {
           id: menteeId,
           email,
-          biodata: { name, location, gender },
+          profilePicture,
+          biodata: { name, location, gender, skills },
         },
         mentor: {
           id: mentorId,
           email: mentorEmail,
+          profilePicture: mentorProfilePicture,
           biodata: {
             name: mentorName,
             location: mentorLocation,
             gender: mentorGender,
+            skills: mentorSkills,
           },
         },
       }) => ({
         id,
         ...(user.role === Role.MENTOR
-          ? { menteeId, email, name, location, gender }
+          ? { menteeId, email, name, location, gender, profilePicture, skills }
           : {
               mentorId,
               email: mentorEmail,
               name: mentorName,
               location: mentorLocation,
               gender: mentorGender,
+              profilePicture: mentorProfilePicture,
+              skills: mentorSkills,
             }),
       }),
     );

@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import { WsAdapter } from '@nestjs/platform-ws'
 
 async function bootstrap() {
@@ -10,9 +9,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.setGlobalPrefix('api');
   app.useWebSocketAdapter(new WsAdapter(app))
-  app.useStaticAssets(join(__dirname, '../uploads'), {
-    prefix: '/public/',
-  });
   app.enableCors({
     origin: ['http://localhost:3001'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

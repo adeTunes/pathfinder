@@ -5,19 +5,15 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ConfigService } from '@nestjs/config';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { Role, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private config: ConfigService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async updateProfile(updateUserDto: UpdateUserDto, user: User) {
-    const { id, email } = user;
+    const { id } = user;
     const { availability, ...rest } = updateUserDto;
 
     const biodata = await this.prisma.biodata.update({
@@ -30,6 +26,7 @@ export class UserService {
         gender: true,
         user: {
           select: {
+            isAdult: true,
             email: true,
             id: true,
           },
@@ -87,8 +84,14 @@ export class UserService {
         id: userId,
       },
       data: { isVerified: true },
+      select: {
+        id: true,
+        role: true,
+        email: true,
+        isAdult: true,
+        isVerified: true,
+      },
     });
-    delete user.hash;
     return user;
   }
 }

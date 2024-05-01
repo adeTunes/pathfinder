@@ -27,10 +27,7 @@ export class FileController {
     @Req() req: Request,
     @GetUser('id') userId: number,
   ) {
-    return this.fileService.uploadProfilePicture(
-      getFileUrl(req, file.filename),
-      userId,
-    );
+    return this.fileService.uploadProfilePicture(file?.path, userId);
   }
 
   @Patch('upload-cover-photo')
@@ -42,7 +39,7 @@ export class FileController {
     @GetUser('id') userId: number,
   ) {
     return this.fileService.uploadCoverPhoto(
-      getFileUrl(req, file.filename),
+      file?.path,
       +uploadCourseDto.id,
       userId,
     );
