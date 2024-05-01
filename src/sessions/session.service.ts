@@ -100,7 +100,7 @@ export class SessionService {
       },
     });
     if (!availableMentor)
-      throw new BadRequestException('Mentor is  not free on this day');
+      throw new BadRequestException('Mentor is not free on this day');
     if (requestSessionDto.duration > availableMentor.timeAvailable)
       throw new BadRequestException(
         `You can only schedule for ${availableMentor.timeAvailable} minutes on this day`,

@@ -10,7 +10,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useWebSocketAdapter(new WsAdapter(app))
   app.enableCors({
-    origin: ['http://localhost:3001'],
+    origin: process.env.ALLOWED_ORIGIN?.split(","),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   await app.listen(process.env.APP_PORT || 4000);
