@@ -171,13 +171,13 @@ export class MentorService {
     });
   }
 
-  async pendingMentorshipRequest(user: User) {
+  async pendingMentorshipRequest(user: User, status?: RequestStatus) {
     const requests = await this.prisma.relation.findMany({
       where: {
         ...(user.role === Role.MENTOR
           ? { mentorId: user.id }
           : { menteeId: user.id }),
-        status: RequestStatus.PENDING_REQUEST,
+        status: status ?? RequestStatus.PENDING_REQUEST,
       },
       select: {
         id: true,
@@ -206,7 +206,7 @@ export class MentorService {
                 name: true,
                 location: true,
                 gender: true,
-                skills: true,
+                industry: true,
               },
             },
           },
@@ -231,13 +231,21 @@ export class MentorService {
             name: mentorName,
             location: mentorLocation,
             gender: mentorGender,
-            skills: mentorSkills,
+            industry,
           },
         },
       }) => ({
         id,
         ...(user.role === Role.MENTOR
-          ? { menteeId, email, name, location, gender, profilePicture, skills }
+          ? {
+              menteeId,
+              email,
+              name,
+              location,
+              gender,
+              profilePicture,
+              industry,
+            }
           : {
               mentorId,
               email: mentorEmail,
@@ -245,7 +253,7 @@ export class MentorService {
               location: mentorLocation,
               gender: mentorGender,
               profilePicture: mentorProfilePicture,
-              skills: mentorSkills,
+              skills,
             }),
       }),
     );

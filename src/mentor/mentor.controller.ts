@@ -12,7 +12,7 @@ import {
 import { MentorService } from './mentor.service';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
-import { User } from '@prisma/client';
+import { RequestStatus, User } from '@prisma/client';
 import {
   AcceptRejectDto,
   CancelRequestDto,
