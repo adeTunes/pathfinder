@@ -160,6 +160,17 @@ export class MentorService {
     });
   }
 
+  async cancelMentorshipRequest(requestId: number) {
+    await this.prisma.relation.delete({
+      where: { id: requestId },
+    });
+
+    return api_response({
+      status: HttpStatus.OK,
+      message: 'Cancelled successfully',
+    });
+  }
+
   async pendingMentorshipRequest(user: User) {
     const requests = await this.prisma.relation.findMany({
       where: {

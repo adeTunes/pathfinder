@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,6 +15,7 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { User } from '@prisma/client';
 import {
   AcceptRejectDto,
+  CancelRequestDto,
   MentorshipRequestAction,
 } from './dto/accept-reject.dto';
 
@@ -52,6 +54,14 @@ export class MentorController {
     return this.mentorService.acceptRejectMentorshipRequest(
       user,
       acceptRejectDto,
+    );
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('mentorship-requests/cancel')
+  cancelMentorshipRequest(@Body() cancelRequestDto: CancelRequestDto) {
+    return this.mentorService.cancelMentorshipRequest(
+      cancelRequestDto.requestId,
     );
   }
 
