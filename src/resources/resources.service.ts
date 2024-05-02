@@ -45,6 +45,7 @@ export class ResourcesService {
     });
     return resources;
   }
+  
   async getAllResources(type: ResourceType) {
     const resources = await this.prisma.resources.findMany({
       where: { type },

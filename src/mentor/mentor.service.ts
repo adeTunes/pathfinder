@@ -29,6 +29,7 @@ export class MentorService {
         id: true,
         email: true,
         role: true,
+        profilePicture: true,
         mentor: {
           select: {
             status: true,
@@ -53,10 +54,11 @@ export class MentorService {
         },
       },
     });
-    return mentors.map(({ id, email, mentor, biodata }) => {
+    return mentors.map(({ id, email, profilePicture, mentor, biodata }) => {
       return {
         id,
         email,
+        profilePicture,
         ...(userId && {
           status:
             mentor.find((el) => el.mentee.id === userId)?.status ??

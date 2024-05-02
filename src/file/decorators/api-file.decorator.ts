@@ -13,14 +13,10 @@ export function ApiFile(fieldName: string = 'profile_picture') {
       FileInterceptor(fieldName, {
         storage: diskStorage({
           destination: './uploads',
-          // filename(req, file, callback) {
-          //   const uniqueSuffix =
-          //     Date.now() + '-' + Math.round(Math.random() + 1e9);
-          //   const ext = extname(file.originalname);
-          //   const fileName = `${file.originalname.replace(ext, '').replaceAll(' ', '_')}-${uniqueSuffix}-${ext}`;
-
-          //   callback(null, fileName);
-          // },
+          filename(req, file, callback) {
+            const fileName = `${file.originalname.replaceAll(' ', '_')}`;
+            callback(null, fileName);
+          },
         }),
         limits: {
           fileSize: 1024 * 1024 * 1,
